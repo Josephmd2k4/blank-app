@@ -1,6 +1,9 @@
 import streamlit as st
 
-st.title("🎈 My new app")
+st.title("Thyroid Cancer")
 st.write(
-    "Let's start building! For help and inspiration, head over to [docs.streamlit.io](https://docs.streamlit.io/)."
+    "Upload photo below:"
 )
+menu = ["Image","Dataset","About"]
+choice = st.sidebar.selectbox("Menu",menu)
+st.file_uploader("Image must be 24x24 in PNG format")

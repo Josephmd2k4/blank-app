@@ -5,6 +5,10 @@ from torchvision import models, transforms
 import numpy as np
 from efficientnet_pytorch import EfficientNet
 
+#Joseph DeMarco, Brendan Whitmire, Aiden Coffey, Mindy Cook
+#Senior Project AI detection of Thyroid Cancer
+#Website part.
+
 
 
 @st.cache_resource

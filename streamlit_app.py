@@ -43,9 +43,10 @@ def preprocess_image(image):
     img_tensor = preprocess(image).unsqueeze(0)  # Add batch dimension
     return img_tensor
 
-st.title("Thyroid Cancer")
+st.title("ThyroiDx Model")
 menu = ["Image","Dataset","About"]
-choice = st.sidebar.selectbox("Menu",menu)
+choice = st.sidebar.button("button1")
+choice2 = st.sidebar.button("button2")
 uploaded_file = st.file_uploader("Upload Photo Below:")
 if uploaded_file is not None:
     image = Image.open(uploaded_file)

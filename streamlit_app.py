@@ -84,7 +84,7 @@ if page == "ThyroiDx Model":
 
                         # Display the image and prediction in the grid layout
                         with columns[i % 3]:  # Rotate across columns
-                            st.image(image, caption=f'{image_file}', width=100)
+                            st.image(image)
                             st.write(f"Confidence: {confidence_cancerous:.2f}%")
 
                 # Calculate the average confidence for cancerous class
@@ -96,9 +96,9 @@ if page == "ThyroiDx Model":
 
                 # Determine final classification based on average confidence
                 if average_confidence_cancerous > 50:
-                    st.write("The scan is classified as **cancerous**.")
+                    st.write("The patient is classified as **cancerous**.")
                 else:
-                    st.write("The scan is classified as **non-cancerous**.")
+                    st.write("The patient is classified as **non-cancerous**.")
         else:
             st.write("Please upload a zip file containing images.")
 

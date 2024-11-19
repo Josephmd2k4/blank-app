@@ -16,7 +16,6 @@ def load_model():
     model = EfficientNet.from_name('efficientnet-b0')  # Initialize the architecture
 
     # Modify the final fully connected layer to match your output (2 classes)
-
     num_ftrs = model._fc.in_features
     model._fc = torch.nn.Linear(num_ftrs, 2)
 
@@ -43,15 +42,6 @@ def preprocess_image(image):
     img_tensor = preprocess(image).unsqueeze(0)  # Add batch dimension
     return img_tensor
 
-st.title("ThyroiDx Model")
-uploaded_file = st.file_uploader("Upload a Zip File of Images Below:")
-        transforms.Resize((224, 224)),  # Adjust size to what your model expects
-        transforms.ToTensor(),          # Convert the image to a PyTorch tensor
-        transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),  # Normalize with standard ImageNet values
-    ])
-    img_tensor = preprocess(image).unsqueeze(0)  # Add batch dimension
-    return img_tensor
-
 # Create a sidebar for navigation
 page = st.sidebar.selectbox("Navigation", ["ThyroiDx Model", "About Us"])
 
@@ -71,13 +61,6 @@ if page == "ThyroiDx Model":
                 total_confidence_cancerous = 0
                 total_images = 0
 
-            for image_file in image_files:
-                with zip_file.open(image_file) as file:
-                    image = Image.open(file)
-                    st.image(image, caption=f'Uploaded Image: {image_file}', use_column_width=True)
-                    
-                    # Preprocess the image
-                    processed_image = preprocess_image(image)
                 columns = st.columns(3)  # Set up 3 columns for grid layout
 
                 for i, image_file in enumerate(image_files):
@@ -99,7 +82,6 @@ if page == "ThyroiDx Model":
                         total_confidence_cancerous += confidence_cancerous
                         total_images += 1
 
-                    st.write(f"Confidence that {image_file} is cancerous: {confidence_cancerous:.2f}%")
                         # Display the image and prediction in the grid layout
                         with columns[i % 3]:  # Rotate across columns
                             st.image(image)
@@ -112,13 +94,6 @@ if page == "ThyroiDx Model":
                 st.write(f"\n**Overall Prediction for Patient ({uploaded_file.name})**")
                 st.write(f"The average confidence across {total_images} images is {average_confidence_cancerous:.2f}%.")
 
-            # Determine final classification based on average confidence
-            if average_confidence_cancerous > 50:
-                st.write("The scan is classified as **cancerous**.")
-            else:
-                st.write("The scan is classified as **non-cancerous**.")
-    else:
-        st.write("Please upload a zip file containing images.")
                 # Determine final classification based on average confidence
                 if average_confidence_cancerous > 50:
                     st.write("The patient is classified as **cancerous**.")

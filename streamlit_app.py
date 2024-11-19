@@ -6,7 +6,7 @@ from efficientnet_pytorch import EfficientNet
 import torch.nn.functional as F  # Import for softmax
 import zipfile
 import io
-
+import torch
 # Joseph DeMarco, Brendan Whitmire, Aiden Coffey, Mindy Cook
 # Senior Project AI detection of Thyroid Cancer
 # Website part.

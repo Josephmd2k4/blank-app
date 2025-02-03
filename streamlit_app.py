@@ -12,24 +12,28 @@ import torch
 
 @st.cache_resource
 def load_model():
-    model = EfficientNet.from_name('efficientnet-b0')  # Initialize the architecture
+    model = EfficientNet.from_name('efficientnet-b0')  # Initialize architecture
 
-    # Modify the final fully connected layer to match your output (2 classes)
+    # Modify the final fully connected layer to match your output classes (2)
     num_ftrs = model._fc.in_features
-    model._fc = torch.nn.Linear(num_ftrs, 2)
+    model._fc = torch.nn.Linear(num_ftrs, 2)  # Ensure we override the last layer
 
-    # Load the pretrained weights except the final layer (_fc)
-    state_dict = torch.load('efficientnet-b0-clf.pt', map_location=torch.device('cpu'))
+    # Load the new model weights
+    state_dict = torch.load('Best_model_trial_5_with_AUC_0.9740.pth', map_location=torch.device('cpu'))
     
-    # Ignore the mismatch in the final fully connected layer
+    # Remove mismatched final layer weights
     state_dict.pop('_fc.weight', None)
     state_dict.pop('_fc.bias', None)
-    
-    model.load_state_dict(state_dict, strict=False)  # Load weights except fc
-    model.eval()  # Set model to evaluation mode
+
+    # Load the rest of the state dictionary
+    model.load_state_dict(state_dict, strict=False)  # Allow missing final layer
+
+    model.eval()  # Set to evaluation mode
     return model
 
 model = load_model()
+
+
 
 # Define a function to preprocess the uploaded image
 def preprocess_image(image):
@@ -72,12 +76,15 @@ if page == "ThyroiDx Model":
                         # Run inference with PyTorch model
                         with torch.no_grad():
                             prediction = model(processed_image)
-                        
+                        print(f"Raw model output: {prediction}")
+
                         # Apply softmax to get probabilities for each class
                         probabilities = F.softmax(prediction, dim=1)
-                        print(prediction)
+                        #print(prediction)
+                        print(f"Softmax probabilities: {probabilities}")
+
                         # Get the probability for the cancerous class (class 1)
-                        confidence_cancerous = probabilities[0][1].item() * 100  # Convert to percentage
+                        confidence_cancerous = probabilities[0][0].item() * 100  # Convert to percentage
                         total_confidence_cancerous += confidence_cancerous
                         total_images += 1
 

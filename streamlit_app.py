@@ -103,10 +103,11 @@ if page == "ThyroiDx Model":
 
                 for i, image_file in enumerate(image_files):
                     with zip_file.open(image_file) as file:
-                        image = Image.open(file)
+                        image = Image.open(file).convert("RGB")
+
 
                         # Preprocess the image
-                        processed_image = preprocess_image(image)
+                        processed_image = preprocess_image(image).to(dtype=torch.float32)
 
                         # Run inference with PyTorch model
                         with torch.no_grad():
@@ -136,7 +137,12 @@ if page == "ThyroiDx Model":
                 average_confidence_cancerous = total_confidence_cancerous / total_images
 
                 # Determine final classification based on average confidence
-                final_classification = "cancerous" if average_confidence_cancerous > 50 else "non-cancerous"
+                if average_confidence_cancerous > 60:
+                    final_classification = "Cancerous"
+                elif average_confidence_cancerous < 40:
+                    final_classification = "Non-Cancerous"
+                else:
+                    final_classification = "Inconclusive"
 
                 # Output the overall result
                 st.write(f"\n**Overall Prediction for Patient ({uploaded_file.name})**")
